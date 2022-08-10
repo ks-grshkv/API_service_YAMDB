@@ -17,12 +17,13 @@ class User(AbstractUser):
         choices=CHOICES,
         default=CHOICES[0],
     )
-    # confirmation_code = models.CharField(
-    #     max_length=4,
-    # )
-    # password = None
- #   username = models.CharField(max_length=40, unique=True)
+    confirmation_code = models.CharField(
+        max_length=5,
+        blank=True
+    )
+    password = models.CharField(max_length=10, blank=True)
+    # username = models.CharField(max_length=40, unique=True)
     # USERNAME_FIELD = 'username'
- #   email = models.CharField(max_length=40, unique=True)
-    # EMAIL_FIELD = 'email'
- #   REQUIRED_FIELDS = []
+    email = models.CharField(max_length=40, unique=True)
+    EMAIL_FIELD = 'email'
+    # REQUIRED_FIELDS = ['username','email']
