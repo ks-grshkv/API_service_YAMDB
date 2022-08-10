@@ -20,12 +20,11 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from users import urls
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('auth/', include('users.urls')),
+    path('api/v1/auth/', include('users.urls')),
 #    path('auth/', include('djoser.urls')),
 #    path('auth/', include('djoser.urls.jwt')),
     path(

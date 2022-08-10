@@ -9,7 +9,7 @@ from .send_email import Util
 from rest_framework import viewsets, generics
 # viewsets.ModelViewSet
 
-    
+
 class UserRegisterView(generics.GenericAPIView):
     serializer_class = UserSerializer
 
@@ -18,7 +18,7 @@ class UserRegisterView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        email_body = 'test confrmation code: 00000'
+        email_body = 'test confrmation code: 0000FFFF0'
         email_address = self.request.data['email']
         data = {
             'email_body': email_body,
