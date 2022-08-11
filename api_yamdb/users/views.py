@@ -1,24 +1,41 @@
 # from .permissions import IsAuthorOrReadOnlyPermission
-from .serializers import UserSerializer, UserGetTokenSerializer
-from .models import User
-
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.views import APIView
+from rest_framework import generics, permissions, viewsets
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+
+from .models import User
+from .permissions import IsAdmin
 from .send_email import Util
-from rest_framework import viewsets, generics
-# viewsets.ModelViewSet
+from .serializers import UserGetTokenSerializer, UserSerializer
+
+viewsets.ModelViewSet
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+    permission_classes = (IsAdmin,) 
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
 
 class UserRegisterView(generics.GenericAPIView):
     serializer_class = UserSerializer
+    # permission_classes = (permissions.IsAuthenticatedOrReadOnly,) 
 
     def post(self, serializer):
+        confirmation_code = User.get_confirmation_code(self)
+        self.request.data['confirmation_code'] = confirmation_code
         serializer = self.serializer_class(data=self.request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-
-        email_body = 'test confrmation code: 0000FFFF0'
+        # user = User.objects.create(
+        #     username=self.request.data['username'],
+        #     email=self.request.data['email'],
+        # )
+        email_body = f'Your confirmatio code: {confirmation_code}'
         email_address = self.request.data['email']
         data = {
             'email_body': email_body,
@@ -29,20 +46,15 @@ class UserRegisterView(generics.GenericAPIView):
         return Response(serializer.data)
 
 
-class UserGetTokenView(APIView):
-    serializer_class = UserGetTokenSerializer
+class UserGetTokenView(generics.GenericAPIView):
+    serializer_class = UserSerializer
     
     def post(self, request):
-        serializer = UserGetTokenSerializer(data=self.request.data)
-        confirmation_code = serializer.data.get('confirmation_code')
-        username = serializer.data.get('username')
+        confirmation_code = self.request.data.get('confirmation_code')
+        username = self.request.data.get('username')
         user = User.objects.get(
             username=username,
             confirmation_code=confirmation_code
         )
         refresh = RefreshToken.for_user(user)
-        result = {
-            'refresh': str(refresh),
-            'access': str(refresh.access_token),
-        }
-        return Response(result)
+        return Response(str(refresh.access_token))
