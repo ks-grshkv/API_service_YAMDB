@@ -1,12 +1,16 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+class Roles():
+    admin = 'admin'
+    user = 'user'
+    moderator = 'moderator'
 
 class User(AbstractUser):
     CHOICES = (
-        ('admin', 'Администратор'),
-        ('user', 'Пользователь'),
-        ('moderator', 'Модератор'),
+        (Roles.admin, 'Пользователь'),
+        (Roles.user, 'Администратор'),
+        (Roles.moderator, 'Модератор'),
     )
     bio = models.TextField(
         'Биография',
