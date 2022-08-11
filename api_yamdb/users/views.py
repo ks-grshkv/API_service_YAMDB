@@ -15,6 +15,7 @@ viewsets.ModelViewSet
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
+    # permission_classes = (permissions.IsAuthenticatedOrReadOnly,) 
     permission_classes = (IsAdmin,) 
 
     def perform_create(self, serializer):
@@ -35,7 +36,7 @@ class UserRegisterView(generics.GenericAPIView):
         #     username=self.request.data['username'],
         #     email=self.request.data['email'],
         # )
-        email_body = f'Your confirmatio code: {confirmation_code}'
+        email_body = f'Your confirmation code: {confirmation_code}'
         email_address = self.request.data['email']
         data = {
             'email_body': email_body,
