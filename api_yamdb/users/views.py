@@ -19,7 +19,9 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdmin,) 
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        serializer = self.serializer_class(data=self.request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
 
 
 class UserRegisterView(generics.GenericAPIView):
@@ -28,14 +30,15 @@ class UserRegisterView(generics.GenericAPIView):
 
     def post(self, serializer):
         confirmation_code = User.get_confirmation_code(self)
-        self.request.data['confirmation_code'] = confirmation_code
-        serializer = self.serializer_class(data=self.request.data)
+        data = {
+            "username": self.request.data['username'],
+            "email": self.request.data['email'],
+            "confirmation_code": confirmation_code
+        }
+        serializer = self.serializer_class(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        # user = User.objects.create(
-        #     username=self.request.data['username'],
-        #     email=self.request.data['email'],
-        # )
+        
         email_body = f'Your confirmation code: {confirmation_code}'
         email_address = self.request.data['email']
         data = {
