@@ -1,11 +1,13 @@
+from random import randrange
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
 class User(AbstractUser):
     CHOICES = (
-        ('admin', 'Администратор'),
         ('user', 'Пользователь'),
+        ('admin', 'Администратор'),
         ('moderator', 'Модератор'),
     )
     bio = models.TextField(
@@ -19,11 +21,10 @@ class User(AbstractUser):
     )
     confirmation_code = models.CharField(
         max_length=5,
-        blank=True
+        default='00000'
     )
     password = models.CharField(max_length=10, blank=True)
-    # username = models.CharField(max_length=40, unique=True)
-    # USERNAME_FIELD = 'username'
-    email = models.CharField(max_length=40, unique=True)
-    EMAIL_FIELD = 'email'
-    # REQUIRED_FIELDS = ['username','email']
+
+    def get_confirmation_code(self):
+        self.confirmation_code = randrange(10000, 100000)
+        return self.confirmation_code

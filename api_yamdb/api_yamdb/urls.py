@@ -15,19 +15,26 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from rest_framework.routers import DefaultRouter
 from django.views.generic import TemplateView
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
+from users.views import UserViewSet
+from rest_framework_simplejwt.views import (TokenObtainPairView,
+                                            TokenRefreshView)
 
+
+router = DefaultRouter()
+
+router.register(
+    'users',
+    UserViewSet,
+    basename='users'
+)
 
 urlpatterns = [
     path('api/', include('api.urls', namespace='api')),
     path('admin/', admin.site.urls),
     path('api/v1/auth/', include('users.urls')),
-#    path('auth/', include('djoser.urls')),
-#    path('auth/', include('djoser.urls.jwt')),
+    path('api/v1/', include(router.urls)),
     path(
         'redoc/',
         TemplateView.as_view(template_name='redoc.html'),
