@@ -16,7 +16,7 @@ class IsUser(permissions.BasePermission):
 class IsAdmin(permissions.BasePermission):
 
     def has_permission(self, request, view):
-        return request.user.is_authenticated and (
+        return (
             request.user.role == 'admin'
             or request.user.role == 'Администратор'
         )
