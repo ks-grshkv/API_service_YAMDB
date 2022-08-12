@@ -1,4 +1,5 @@
 from rest_framework import permissions
+from .models import Roles
 
 
 class IsUser(permissions.BasePermission):
@@ -16,15 +17,13 @@ class IsUser(permissions.BasePermission):
 class IsAdmin(permissions.BasePermission):
 
     def has_permission(self, request, view):
-        print(request.user.role)
-        return request.user.is_authenticated and (
-            request.user.role == 'admin'
-            or request.user.role == 'Администратор'
+        return (
+            request.user.is_authenticated
+            and request.user.role == Roles.admin
         )
 
     def has_object_permission(self, request, view, obj):
-        print(request.user.role)
-        return request.user.is_authenticated and (
-            request.user.role == 'admin'
-            or request.user.role == 'Администратор'
+        return (
+            request.user.is_authenticated
+            and request.user.role == Roles.admin
         )
