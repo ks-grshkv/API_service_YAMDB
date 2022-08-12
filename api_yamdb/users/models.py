@@ -10,8 +10,8 @@ class Roles():
 
 class User(AbstractUser):
     CHOICES = (
-    	(Roles.user, 'Администратор'),
-        (Roles.admin, 'Пользователь'),
+    	(Roles.admin, 'Администратор'),
+        (Roles.user, 'Пользователь'),
         (Roles.moderator, 'Модератор'),
     )
     bio = models.TextField(
