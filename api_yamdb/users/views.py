@@ -1,7 +1,9 @@
 # from .permissions import IsAuthorOrReadOnlyPermission
 from rest_framework import generics, permissions, viewsets
 from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
+from random import randrange
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import User
@@ -10,6 +12,7 @@ from .send_email import Util
 from .serializers import UserGetTokenSerializer, UserSerializer
 
 viewsets.ModelViewSet
+from http import HTTPStatus
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -19,7 +22,12 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdmin,) 
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        serializer = self.serializer_class(data=self.request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+    def perform_update(self, serializer):
+        pass
 
 
 class UserRegisterView(generics.GenericAPIView):
@@ -27,16 +35,20 @@ class UserRegisterView(generics.GenericAPIView):
     # permission_classes = (permissions.IsAuthenticatedOrReadOnly,) 
 
     def post(self, serializer):
-        confirmation_code = User.get_confirmation_code(self)
-        self.request.data['confirmation_code'] = confirmation_code
         serializer = self.serializer_class(data=self.request.data)
         serializer.is_valid(raise_exception=True)
+        if self.request.data['username'] == 'me':
+            return Response(status=HTTPStatus.BAD_REQUEST)
         serializer.save()
-        # user = User.objects.create(
-        #     username=self.request.data['username'],
-        #     email=self.request.data['email'],
-        # )
-        email_body = f'Your confirmation code: {confirmation_code}'
+        user = User.objects.get(
+            username=self.request.data['username'],
+            email=self.request.data['email'],
+        )
+        
+        user.confirmation_code = randrange(10000, 100000)
+        user.save()
+
+        email_body = f'Your confirmation code: {user.confirmation_code}'
         email_address = self.request.data['email']
         data = {
             'email_body': email_body,
@@ -44,7 +56,10 @@ class UserRegisterView(generics.GenericAPIView):
             'to': [email_address],
         }
         Util.send_email(data)
-        return Response(serializer.data)
+        return Response({
+            "username": self.request.data['username'],
+            "email": self.request.data['email'],
+        })
 
 
 class UserGetTokenView(generics.GenericAPIView):
@@ -53,7 +68,8 @@ class UserGetTokenView(generics.GenericAPIView):
     def post(self, request):
         confirmation_code = self.request.data.get('confirmation_code')
         username = self.request.data.get('username')
-        user = User.objects.get(
+        user = get_object_or_404(
+            User,
             username=username,
             confirmation_code=confirmation_code
         )

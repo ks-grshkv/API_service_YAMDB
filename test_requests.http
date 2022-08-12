@@ -3,8 +3,8 @@ POST http://127.0.0.1:8000/api/v1/auth/signup/
 Content-Type: application/json
 
 {
-    "email": "d33w@assaf.sf",
-    "username": "ara",
+    "email": "bfffv@assaf.sf",
+    "username": "fssg",
     "role": "admin"
 }
 
@@ -14,11 +14,11 @@ POST http://127.0.0.1:8000/api/v1/auth/token/
 Content-Type: application/json
 
 {
-    "username": "ara",
-    "confirmation_code": "30373"
+    "username": "fsdfsdfsads3qa",
+    "confirmation_code": "88775"
 }
 
 ###
 GET http://127.0.0.1:8000/api/v1/users
 Content-Type: application/json
-Authorization: Token eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwMzMwMzcwLCJqdGkiOiJkNmEwMmMyZDUzNGU0ZTFjYTRlMTcxNGI1ODQ2YzI5NSIsInVzZXJfaWQiOjM1fQ.vo4AvwRsEoMTY0-n99pPCNZq7_OgBi3OWni2LxjczUc
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwMzMyMzAzLCJqdGkiOiIyZGY1M2JlYzFlMWU0N2U3ODg4NmExZTVmMTFhMDI4MSIsInVzZXJfaWQiOjM4fQ.14K8JLxS9QFqLfMnv0t1DgOvscxsJjpt7s-2Fgguoew
