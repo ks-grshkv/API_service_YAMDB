@@ -12,5 +12,5 @@ router.register('titles', TitleViewSet)
 router.register('genres', GenreViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('v1/', include(router.urls)),
 ] 
