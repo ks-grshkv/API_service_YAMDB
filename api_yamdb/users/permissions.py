@@ -34,15 +34,29 @@ class IsAdmin(permissions.BasePermission):
 class IsAdminOrSelf(permissions.BasePermission):
 
     def has_permission(self, request, view):
-        print('cccccccccccc')
-        return (
+        
+        verdict = (
             request.user.is_authenticated
             and request.user.role == Roles.admin
         ) or request.user.is_superuser
+        print('ENTER HAS PERMISSION', verdict)
+        return verdict
 
     def has_object_permission(self, request, view, obj):
-        print('ssswwsssswww')
-        return request.user.is_superuser or (
+        
+        verdict = request.user.is_superuser or (
             request.user.is_authenticated
             and request.user.role == Roles.admin
         ) or request.user.username == obj.user.username
+        print('ENTER HAS OBJECT PERMISSION', verdict)
+        return verdict
+
+
+class IsAdminOrAuth(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        return request.user.is_authenticated
+

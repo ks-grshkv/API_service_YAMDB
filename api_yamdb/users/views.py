@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import User
-from .permissions import IsAdmin, IsAdminOrSelf, IsAuth
+from .permissions import IsAdmin, IsAdminOrSelf, IsAuth, IsAdminOrAuth
 from .send_email import Util
 from .serializers import UserGetTokenSerializer, UserSerializer
 
@@ -27,31 +27,24 @@ class UserViewSet(viewsets.ModelViewSet):
     #     serializer.is_valid(raise_exception=True)
     #     serializer.save()
 
-    def perform_get(self, serializer):
-        print('WWWWWWWWWWWWW')
-        pass
-
-    @action(detail=False, methods=['get'], url_path='me', permission_classes = (IsAuth, ))
-    def me_get(self, request, pk=None):
-        print('AAAAAAAAAA')
+    @action(detail=False, methods=['get', 'patch'], url_path='me', permission_classes = (IsAdminOrAuth, ))
+    def me(self, request, pk=None):
+        print('ENTER ME')
         user = get_object_or_404(
             User,
             username=self.request.user.username,
         )
-        print('AAAAAAAAddAA', user)
-        serializer = self.serializer_class(user)
-        return Response(serializer.data)
+        if request.method == 'GET':
+            print('ENTER GET ME')
+            serializer = self.serializer_class(user)
+            return Response(serializer.data)
+        else:
+            print('ENTER PATCH ME')
+            serializer = self.serializer_class(user, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+        return Response(serializer.data) 
 
-    @action(detail=False, methods=['patch'], url_path='me', permission_classes = (IsAuth, ))
-    def me_patch(self, request, pk=None):
-        print('AAAAAAAAAA')
-        user = get_object_or_404(
-            User,
-            username=self.request.user.username,
-        )
-        print('AAAAAAAAddAA', user)
-        user.update()
-        return Response(status=HTTPStatus.OK)
 
     # @action(detail=True, methods=['get', 'patch'], url_path='<str:username>')
     # def username(self, request, pk=None):
@@ -69,7 +62,7 @@ class UserProfileViewSet(viewsets.ViewSet):
     permission_classes = (IsAuth, )
 
     def perform_get(self, serializer):
-        print('AAAAAAAAAAAA')
+        print('AAAAAAAAAAbbAA')
         pass
 
     
