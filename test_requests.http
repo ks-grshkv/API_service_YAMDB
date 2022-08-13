@@ -14,8 +14,8 @@ POST http://127.0.0.1:8000/api/v1/auth/token/
 Content-Type: application/json
 
 {
-    "username": "ss55",
-    "confirmation_code": "80691"
+    "username": "a",
+    "confirmation_code": "80ss1"
 }
 
 ###
