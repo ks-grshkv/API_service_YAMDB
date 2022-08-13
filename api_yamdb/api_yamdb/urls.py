@@ -19,10 +19,9 @@ from django.views.generic import TemplateView
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import (TokenObtainPairView,
                                             TokenRefreshView)
-from users.views import UserViewSet, UserProfileViewSet
+from users.views import UserViewSet
 
 router = DefaultRouter()
-router2 = DefaultRouter()
 
 router.register(
     'users',
@@ -30,17 +29,10 @@ router.register(
     basename='users'
 )
 
-router2.register(
-    r'users/(?P<username>[\w.@+-]+)',
-    UserProfileViewSet,
-    basename='users'
-)
-
 urlpatterns = [
     path('api/', include('api.urls', namespace='api')),
     path('admin/', admin.site.urls),
     path('api/v1/auth/', include('users.urls')),
-    path('api/v1/', include(router2.urls)),
     path('api/v1/', include(router.urls)),
     path(
         'redoc/',

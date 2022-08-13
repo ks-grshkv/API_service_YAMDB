@@ -25,7 +25,7 @@ Content-Type: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwNTA5Mjk1LCJqdGkiOiJiNDI5N2Q0ZjY0MTA0NGVmYWMxYWU1Mjc5ZTUwYjViZiIsInVzZXJfaWQiOjcwfQ.zMqE1e7M0-bK5KrXRweb55Zqd7En3PQcXcH_sNFkR5g
 
 ###
-GET http://127.0.0.1:8000/api/v1/users/me
+GET http://127.0.0.1:8000/api/v1/users/new_new_username
 Content-Type: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwNTAzMjI1LCJqdGkiOiI5ZjEwOTM5ZDIxNGM0YjNkOGYwMmFlNDA5ZGI1NmIxMCIsInVzZXJfaWQiOjY5fQ.PhqOAyreNSUBXtUeuFwwv2ea1wmYwL6CSMvDGurdYBA
 

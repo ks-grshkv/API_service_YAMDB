@@ -4,13 +4,12 @@ from random import randrange
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions, viewsets
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import User
-from .permissions import IsAdmin, IsAdminOrSelf, IsAuth, IsAdminOrAuth
+from .models import Roles, User
+from .permissions import IsAdmin, IsAdminOrSelf, IsAdminOrAuth
 from .send_email import Util
-from .serializers import UserGetTokenSerializer, UserSerializer
+from .serializers import UserSerializer
 
 from http import HTTPStatus
 
@@ -21,54 +20,73 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     permission_classes = (IsAdminOrSelf, )
+    lookup_field = 'pk'
 
-    # def perform_create(self, serializer):
-    #     serializer = self.serializer_class(data=self.request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     serializer.save()
+    def get_object(self):
+        queryset = self.get_queryset()
+        obj = get_object_or_404(
+            queryset,
+            username=self.kwargs[self.lookup_field]
+        )
+        return obj
 
-    @action(detail=False, methods=['get', 'patch'], url_path='me', permission_classes = (IsAdminOrAuth, ))
+    def perform_update(self, serializer):
+        print('PERFORM USER UPDATE', self.request.data)
+        user = get_object_or_404(
+            self.queryset,
+            username=self.kwargs[self.lookup_field]
+        )
+        serializer = self.serializer_class(
+            user,
+            data=self.request.data,
+            partial=True
+        )
+        if serializer.is_valid():
+            serializer.save()
+        if (user.role != Roles.admin) and (user.role != Roles.user) and (user.role != Roles.moderator):
+            return Response(HTTPStatus.BAD_REQUEST)
+        else:
+            return Response(serializer.data)
+
+
+    @action(
+        detail=False,
+        methods=['get', 'patch'],
+        url_path='me',
+        permission_classes=(IsAdminOrAuth, ))
     def me(self, request, pk=None):
-        print('ENTER ME')
         user = get_object_or_404(
             User,
             username=self.request.user.username,
         )
+
         if request.method == 'GET':
-            print('ENTER GET ME')
             serializer = self.serializer_class(user)
             return Response(serializer.data)
         else:
-            print('ENTER PATCH ME')
-            serializer = self.serializer_class(user, data=request.data, partial=True)
+            data = {"role": request.user.role}
+            serializer = self.serializer_class(
+                user,
+                data=request.data,
+                partial=True
+            )
             if serializer.is_valid():
                 serializer.save()
-        return Response(serializer.data) 
+            if (
+                request.user.role != Roles.admin
+            ) and not request.user.is_superuser:
+                serializer = self.serializer_class(
+                    user,
+                    data=data,
+                    partial=True
+                )
+            if serializer.is_valid():
+                serializer.save()
+        return Response(serializer.data)
 
 
-    # @action(detail=True, methods=['get', 'patch'], url_path='<str:username>')
-    # def username(self, request, pk=None):
-    #     serializer = self.serializer_class(data=self.request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     return Response(serializer.data, status=HTTPStatus.OK)
-
-    # def perform_update(self, serializer):
-    #     pass
-
-
-class UserProfileViewSet(viewsets.ViewSet):
-    serializer_class = UserSerializer
-    queryset = User.objects.all()
-    permission_classes = (IsAuth, )
-
-    def perform_get(self, serializer):
-        print('AAAAAAAAAAbbAA')
-        pass
-
-    
 class UserRegisterView(generics.GenericAPIView):
     serializer_class = UserSerializer
-    # permission_classes = (permissions.IsAuthenticatedOrReadOnly,) 
 
     def post(self, serializer):
         serializer = self.serializer_class(data=self.request.data)
