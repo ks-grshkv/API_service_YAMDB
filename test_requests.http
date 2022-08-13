@@ -3,8 +3,9 @@ POST http://127.0.0.1:8000/api/v1/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "ss55",
-    "email": "8f4f5s@gf.cd"
+    "username": "s434",
+    "email": "8fs42s@gf.cd",
+    "role": "admin"
 
 }
 
@@ -14,8 +15,8 @@ POST http://127.0.0.1:8000/api/v1/auth/token/
 Content-Type: application/json
 
 {
-    "username": "a",
-    "confirmation_code": "80ss1"
+    "username": "s434",
+    "confirmation_code": "49235"
 }
 
 ###
@@ -24,6 +25,6 @@ Content-Type: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwNDIyNDYyLCJqdGkiOiI3YjllN2JiMDUwMjA0NzNmYTVjOTEwY2M0NTk5MTUwMyIsInVzZXJfaWQiOjY1fQ.ZSt8QQtOsOozwRI9KFwGqVeMFaLijj4Vgt3tY3u7zkw
 
 ###
-GET http://127.0.0.1:8000/api/v1/users/me
+GET http://127.0.0.1:8000/api/v1/users/s44
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwNDIxNDk1LCJqdGkiOiIzODEyYmNlMzVmYTI0Y2ZjYjAzZDZlZTEwYWVlZmNmYiIsInVzZXJfaWQiOjY0fQ.Sr_Tfg_O-8scUtsO5D6sn1Fnc_MHbng0K19zL3ZEeH4
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwNTAzMjI1LCJqdGkiOiI5ZjEwOTM5ZDIxNGM0YjNkOGYwMmFlNDA5ZGI1NmIxMCIsInVzZXJfaWQiOjY5fQ.PhqOAyreNSUBXtUeuFwwv2ea1wmYwL6CSMvDGurdYBA

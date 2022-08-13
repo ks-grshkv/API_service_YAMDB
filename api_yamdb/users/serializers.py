@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
         max_length=100,
         validators=[UniqueValidator(queryset=User.objects.all())],
-        required=True
+        required=True,
     )
     email = serializers.EmailField(
         validators=[UniqueValidator(queryset=User.objects.all())],
