@@ -1,5 +1,5 @@
-from rest_framework.routers import SimpleRouter
 from django.urls import include, path
+from rest_framework.routers import SimpleRouter
 
 from .views import CategoryViewSet, GenreViewSet, TitleViewSet, ReviewViewSet, CommentViewSet
 
@@ -21,5 +21,5 @@ router.register(
     basename='comments'
 )
 urlpatterns = [
-    path('', include(router.urls)),
-] 
+    path('v1/', include(router.urls)),
+]

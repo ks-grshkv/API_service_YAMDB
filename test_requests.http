@@ -3,9 +3,9 @@ POST http://127.0.0.1:8000/api/v1/auth/signup/
 Content-Type: application/json
 
 {
-    "email": "d33w@assaf.sf",
-    "username": "ara",
-    "role": "admin"
+    "username": "ss55",
+    "email": "8f4f5s@gf.cd"
+
 }
 
 
@@ -14,11 +14,16 @@ POST http://127.0.0.1:8000/api/v1/auth/token/
 Content-Type: application/json
 
 {
-    "username": "ara",
-    "confirmation_code": "30373"
+    "username": "mmod",
+    "confirmation_code": "54321"
 }
 
 ###
-GET http://127.0.0.1:8000/api/v1/users
+GET http://127.0.0.1:8000/api/v1/users/me
 Content-Type: application/json
-Authorization: Token eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwMzMwMzcwLCJqdGkiOiJkNmEwMmMyZDUzNGU0ZTFjYTRlMTcxNGI1ODQ2YzI5NSIsInVzZXJfaWQiOjM1fQ.vo4AvwRsEoMTY0-n99pPCNZq7_OgBi3OWni2LxjczUc
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwNDIyNDYyLCJqdGkiOiI3YjllN2JiMDUwMjA0NzNmYTVjOTEwY2M0NTk5MTUwMyIsInVzZXJfaWQiOjY1fQ.ZSt8QQtOsOozwRI9KFwGqVeMFaLijj4Vgt3tY3u7zkw
+
+###
+GET http://127.0.0.1:8000/api/v1/users/me
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwNDIxNDk1LCJqdGkiOiIzODEyYmNlMzVmYTI0Y2ZjYjAzZDZlZTEwYWVlZmNmYiIsInVzZXJfaWQiOjY0fQ.Sr_Tfg_O-8scUtsO5D6sn1Fnc_MHbng0K19zL3ZEeH4
