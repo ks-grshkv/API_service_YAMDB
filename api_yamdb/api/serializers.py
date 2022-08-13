@@ -11,6 +11,11 @@ class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
         fields = ('name','slug')
+        lookup_field = 'slug'
+        extra_kwargs = {
+            'url': {'lookup_field': 'slug'}
+        }
+    
 
 class TitleSerializer(serializers.ModelSerializer):
     genres = GenreSerializer(read_only=True, many=True)
@@ -22,10 +27,8 @@ class TitleSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    author = serializers.SlugRelatedField(
-        read_only=True, slug_field='username'
-    )
 
     class Meta:
-        fields = '__all__'
+        fields = ('id', 'name', 'slug')
         model = Category
+
