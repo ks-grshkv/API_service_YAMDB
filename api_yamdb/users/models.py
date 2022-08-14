@@ -23,7 +23,7 @@ class User(AbstractUser):
     role = models.CharField(
         max_length=10,
         choices=CHOICES,
-        default='user',
+        default=CHOICES[0],
     )
     confirmation_code = models.CharField(
         max_length=5,
