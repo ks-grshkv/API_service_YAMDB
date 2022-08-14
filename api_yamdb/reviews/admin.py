@@ -4,7 +4,7 @@ from .models import Category, Genre, GenreTitle, Title, Review, Comment
 
 
 class TitleAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name', 'year', 'description', 'category')
+    list_display = ('pk', 'name', 'year', 'description', 'category', 'rating')
     empty_value_display = '-пусто-'
 
 
