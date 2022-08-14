@@ -1,9 +1,7 @@
-from email.policy import default
-from random import choices
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
 
-from .models import User, Roles
+from .models import User
 
 print('ENTER SEIALISER')
 
@@ -36,4 +34,3 @@ class UserSerializer(serializers.ModelSerializer):
                 fields=['username', 'email']
             )
         ]
-

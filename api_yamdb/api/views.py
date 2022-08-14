@@ -1,20 +1,14 @@
-from rest_framework import filters, permissions, viewsets, exceptions
 from django.shortcuts import get_object_or_404
-from .mixins import ListCreateDestroyViewset
-from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import exceptions, filters, permissions, viewsets
+from rest_framework.pagination import PageNumberPagination
+from reviews.models import Category, Genre, Review, Title
 
-
-
-from reviews.models import Category, Genre, Title, Review
-from .serializers import (CategorySerializer,
-                          GenreSerializer,
-                          TitleSerializer,
-                          ReviewSerializer,
-                          CommentSerializer)
-
-from .permissions import IsAdminOrReadOnly, OwnerModAdmin
 from .filters import TitleFilter
+from .mixins import ListCreateDestroyViewset
+from .permissions import IsAdminOrReadOnly, OwnerModAdmin
+from .serializers import (CategorySerializer, CommentSerializer,
+                          GenreSerializer, ReviewSerializer, TitleSerializer)
 
 
 class CategoryViewSet(ListCreateDestroyViewset):

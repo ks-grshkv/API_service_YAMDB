@@ -1,19 +1,16 @@
-# from .permissions import IsAuthorOrReadOnlyPermission
+from http import HTTPStatus
 from random import randrange
 
 from django.shortcuts import get_object_or_404
-from rest_framework import generics, permissions, viewsets
+from rest_framework import generics, viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import Roles, User
-from .permissions import IsAdmin, IsAdminOrSelf, IsAdminOrAuth
+from .permissions import IsAdminOrAuth, IsAdminOrSelf
 from .send_email import Util
 from .serializers import UserSerializer
-
-from http import HTTPStatus
-
-from rest_framework.decorators import action
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -42,10 +39,7 @@ class UserViewSet(viewsets.ModelViewSet):
         )
         if serializer.is_valid():
             serializer.save()
-        if (user.role != Roles.admin) and (user.role != Roles.user) and (user.role != Roles.moderator):
-            return Response(HTTPStatus.BAD_REQUEST)
-        else:
-            return Response(serializer.data)
+        return Response(serializer.data)
 
     @action(
         detail=False,
@@ -116,7 +110,7 @@ class UserRegisterView(generics.GenericAPIView):
 
 class UserGetTokenView(generics.GenericAPIView):
     serializer_class = UserSerializer
-    
+
     def post(self, request):
         confirmation_code = self.request.data.get('confirmation_code')
         username = self.request.data.get('username')
@@ -138,4 +132,3 @@ class UserGetTokenView(generics.GenericAPIView):
             return Response(data=str(error), status=HTTPStatus.NOT_FOUND)
         refresh = RefreshToken.for_user(user)
         return Response(str(refresh.access_token))
-

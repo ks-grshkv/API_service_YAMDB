@@ -21,7 +21,6 @@ class IsAdmin(permissions.BasePermission):
 class IsAdminOrSelf(permissions.BasePermission):
 
     def has_permission(self, request, view):
-        
         verdict = (
             request.user.is_authenticated
             and request.user.role == Roles.admin
@@ -29,7 +28,6 @@ class IsAdminOrSelf(permissions.BasePermission):
         return verdict
 
     def has_object_permission(self, request, view, obj):
-        
         verdict = request.user.is_superuser or (
             request.user.is_authenticated
             and request.user.role == Roles.admin
@@ -44,4 +42,3 @@ class IsAdminOrAuth(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         return request.user.is_authenticated
-

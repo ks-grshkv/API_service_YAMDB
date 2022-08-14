@@ -1,14 +1,14 @@
 import datetime
-
 from encodings import search_function
 from re import search
 from unicodedata import category
+
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
 from rest_framework.validators import UniqueTogetherValidator
-
-from reviews.models import Category, Genre, GenreTitle, Review, Title, User, Comment
+from reviews.models import (Category, Comment, Genre, GenreTitle, Review,
+                            Title, User)
 
 
 class GenreSerializer(serializers.ModelSerializer):
