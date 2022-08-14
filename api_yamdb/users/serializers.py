@@ -1,4 +1,5 @@
 from email.policy import default
+from random import choices
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
 
@@ -16,9 +17,6 @@ class UserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
         validators=[UniqueValidator(queryset=User.objects.all())],
         required=True
-    )
-    role = serializers.CharField(
-        default='user'
     )
 
     class Meta:
@@ -39,38 +37,3 @@ class UserSerializer(serializers.ModelSerializer):
             )
         ]
 
-        def validate_role(self, role):
-            print('ENTER ROLE VALIDTION')
-            if role != Roles.admin or role != Roles.user or role != Roles.moderator:
-                raise serializers.ValidationError('Invalid role')
-            return role
-
-        def validate_confirmation_code(self, confirmation_code):
-            print('ENTER CONFIRMATION CODE VALIDATION')
-            if confirmation_code is None:
-                raise serializers.ValidationError('Empty confirmation_code')
-            if not (confirmation_code is str):
-                raise serializers.ValidationError('Confirmation_code should be str')
-            if not (len(confirmation_code) == 5):
-                raise serializers.ValidationError('Confirmation_code should be 5-digit long')
-            return confirmation_code
-
-        def validate(self, data):
-            print('ENTER DATA VALIDTION')
-            user = self.context['request'].user
-            if user.username is None:
-                raise serializers.ValidationError('Empty username')
-            if user.email is None:
-                raise serializers.ValidationError('Empty email')
-            if user.username == 'me':
-                raise serializers.ValidationError('Invalid username')
-            # if not validate_email(email, check_mx=True, verify=True):
-            #     raise serializers.ValidationError("Invalid email")
-            return data
-
-
-class UserGetTokenSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        fields = '__all__'
-        model = User

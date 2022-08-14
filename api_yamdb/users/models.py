@@ -12,7 +12,7 @@ class Roles():
 
 class User(AbstractUser):
     CHOICES = (
-    	(Roles.admin, 'Администратор'),
+        (Roles.admin, 'Администратор'),
         (Roles.user, 'Пользователь'),
         (Roles.moderator, 'Модератор'),
     )
@@ -23,14 +23,10 @@ class User(AbstractUser):
     role = models.CharField(
         max_length=10,
         choices=CHOICES,
-        default=CHOICES[0],
+        default=Roles.user,
     )
     confirmation_code = models.CharField(
         max_length=5,
         default='00000',
     )
     password = models.CharField(max_length=10, blank=True)
-
-    # def get_confirmation_code(self):
-    #     self.confirmation_code = randrange(10000, 100000)
-    #     return self.confirmation_code

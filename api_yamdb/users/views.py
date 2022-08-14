@@ -31,7 +31,6 @@ class UserViewSet(viewsets.ModelViewSet):
         return obj
 
     def perform_update(self, serializer):
-        print('PERFORM USER UPDATE', self.request.data)
         user = get_object_or_404(
             self.queryset,
             username=self.kwargs[self.lookup_field]
@@ -47,7 +46,6 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response(HTTPStatus.BAD_REQUEST)
         else:
             return Response(serializer.data)
-
 
     @action(
         detail=False,
@@ -98,7 +96,7 @@ class UserRegisterView(generics.GenericAPIView):
             username=self.request.data['username'],
             email=self.request.data['email'],
         )
-        
+
         user.confirmation_code = randrange(10000, 100000)
         user.save()
 

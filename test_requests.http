@@ -3,9 +3,9 @@ POST http://127.0.0.1:8000/api/v1/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "s4ss4",
-    "email": "8fssss@gf.cd",
-    "role": "user"
+    "username": "TestAdmin1",
+    "email": "testadmin1@test.test",
+    "role": "admin"
 
 }
 
@@ -15,8 +15,8 @@ POST http://127.0.0.1:8000/api/v1/auth/token/
 Content-Type: application/json
 
 {
-    "username": "s4ss4",
-    "confirmation_code": "73306"
+    "username": "TestAdmin1",
+    "confirmation_code": "36434"
 }
 
 ###
@@ -25,17 +25,17 @@ Content-Type: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwNTA5Mjk1LCJqdGkiOiJiNDI5N2Q0ZjY0MTA0NGVmYWMxYWU1Mjc5ZTUwYjViZiIsInVzZXJfaWQiOjcwfQ.zMqE1e7M0-bK5KrXRweb55Zqd7En3PQcXcH_sNFkR5g
 
 ###
-GET http://127.0.0.1:8000/api/v1/users/new_new_username
+GET http://127.0.0.1:8000/api/v1/users/TestUser1/
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwNTAzMjI1LCJqdGkiOiI5ZjEwOTM5ZDIxNGM0YjNkOGYwMmFlNDA5ZGI1NmIxMCIsInVzZXJfaWQiOjY5fQ.PhqOAyreNSUBXtUeuFwwv2ea1wmYwL6CSMvDGurdYBA
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwNTYxNDY2LCJqdGkiOiIxNmQ0ODRiOGI5YjU0NTMyYjYxZTE0ZWQ5OWU5M2IxZSIsInVzZXJfaWQiOjcyfQ.xdjdoMMqU6-nzmyr3YzwySImWdxeuUgXJHLFPm58BX0
 
 ###
-PATCH http://127.0.0.1:8000/api/v1/users/s4ss4/
+PATCH http://127.0.0.1:8000/api/v1/users/TestUser1/
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwNTAzMjI1LCJqdGkiOiI5ZjEwOTM5ZDIxNGM0YjNkOGYwMmFlNDA5ZGI1NmIxMCIsInVzZXJfaWQiOjY5fQ.PhqOAyreNSUBXtUeuFwwv2ea1wmYwL6CSMvDGurdYBA
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwNTYxNTYxLCJqdGkiOiI1Nzc4MDllMDkxMTY0NmVjOGQyMDM3ODQ5NGIzMjE3NiIsInVzZXJfaWQiOjcyfQ.pjy66GVPRbGo2QWjXlAqqSMnmlikBQjBdqFX9kcjy4k
 
 {
-    "role": "fffffff"
+    "role": "cheburek"
 }
 
 ###
