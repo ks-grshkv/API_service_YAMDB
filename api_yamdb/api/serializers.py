@@ -8,7 +8,8 @@ from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
 from rest_framework.validators import UniqueTogetherValidator
 
-from reviews.models import Category, Genre, GenreTitle, Review, Title, User
+from reviews.models import Category, Genre, GenreTitle, Review, Title, User, Comment
+
 
 class GenreSerializer(serializers.ModelSerializer):
 
@@ -16,6 +17,7 @@ class GenreSerializer(serializers.ModelSerializer):
         model = Genre
         fields = ('name','slug')
       #  search_fields = ('slug',)  
+
 
 class CategorySerializer(serializers.ModelSerializer):
 
@@ -37,7 +39,7 @@ class SlugToModelCategoryRelatedField(SlugRelatedField):
 
 
 class TitleSerializer(serializers.ModelSerializer):
-    genre =SlugToModelGanreRelatedField(
+    genre = SlugToModelGanreRelatedField(
         queryset=Genre.objects.all(),
         slug_field='slug',
         many=True)
@@ -86,13 +88,24 @@ class TitleSerializer(serializers.ModelSerializer):
 
         return title 
 
-    
+
 class ReviewSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(
-        read_only=True, slug_field='username'
+        read_only=True, slug_field='username', default=serializers.CurrentUserDefault()
     )
 
     class Meta:
         fields = '__all__'
         model = Review
-        model = Review
+        read_only_fields = ('title',)
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    author = serializers.SlugRelatedField(
+        read_only=True, slug_field='username'
+    )
+
+    class Meta:
+        fields = ('id', 'author', 'text', 'pub_date')
+        model = Comment
+        read_only_fields = ('review',)
