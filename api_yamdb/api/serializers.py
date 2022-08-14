@@ -1,4 +1,6 @@
 import datetime
+from email.policy import default
+from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
@@ -43,14 +45,15 @@ class TitleSerializer(serializers.ModelSerializer):
         queryset=Category.objects.all(),
         slug_field='slug')
 
-    rating = serializers.FloatField(
-        source='reviews__score__avg',
-        read_only=True
-    )
+    rating = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         fields = ('id', 'name', 'year', 'description', 'genre', 'category', 'rating',)
         model = Title
+
+    def get_rating(self, obj):
+
+        return obj.review.aggregate(Avg('score')).get('score__avg')
 
     def validate_year(self, value):
         year = datetime.date.today().year
