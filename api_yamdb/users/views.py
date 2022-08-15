@@ -1,19 +1,17 @@
 # from .permissions import IsAuthorOrReadOnlyPermission
+from http import HTTPStatus
 from random import randrange
 
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions, viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import Roles, User
-from .permissions import IsAdmin, IsAdminOrSelf, IsAdminOrAuth
+from .permissions import IsAdmin, IsAdminOrAuth, IsAdminOrSelf
 from .send_email import Util
 from .serializers import UserSerializer
-
-from http import HTTPStatus
-
-from rest_framework.decorators import action
 
 
 class UserViewSet(viewsets.ModelViewSet):
