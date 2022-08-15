@@ -68,7 +68,10 @@ class Review(models.Model):
     )
 
     class Meta:
-        constraints = (UniqueConstraint(fields=['author', 'title'], name='unique_booking'), )
+        constraints = (
+            UniqueConstraint(fields=['author', 'title'],
+                             name='unique_booking'),
+        )
 
 
 class Comment(models.Model):
