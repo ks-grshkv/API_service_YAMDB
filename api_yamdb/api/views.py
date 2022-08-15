@@ -1,9 +1,10 @@
-from rest_framework import filters, permissions, viewsets, exceptions
+from rest_framework import filters, permissions, viewsets
 from django.shortcuts import get_object_or_404
 from .mixins import ListCreateDestroyViewset
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
-
+# from django.db.models import Avg
+from django.core.exceptions import ValidationError
 
 
 from reviews.models import Category, Genre, Title, Review
@@ -22,10 +23,9 @@ class CategoryViewSet(ListCreateDestroyViewset):
     serializer_class = CategorySerializer
     permission_classes = (IsAdminOrReadOnly,)
     lookup_field = 'slug'
-    pagination_class = PageNumberPagination 
+    pagination_class = PageNumberPagination
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('name',)  
-
+    search_fields = ('name',)
 
 
 class GenreViewSet(ListCreateDestroyViewset):
@@ -33,19 +33,18 @@ class GenreViewSet(ListCreateDestroyViewset):
     serializer_class = GenreSerializer
     permission_classes = (IsAdminOrReadOnly,)
     lookup_field = 'slug'
-    pagination_class = PageNumberPagination 
+    pagination_class = PageNumberPagination
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
 
- 
+
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
     permission_classes = (IsAdminOrReadOnly,)
-    pagination_class = PageNumberPagination 
+    pagination_class = PageNumberPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter
-
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
@@ -58,10 +57,11 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
-        author = self.request.user
-        if Review.objects.filter(title=title, author=author).exists():
-            raise exceptions.ValidationError('Оставить отзыв можно только один раз')
-        serializer.save(author=self.request.user, title=title)
+        # author = self.request.user
+        # if Review.objects.filter(title=title, author=author).exists():
+        #     raise ValidationError('AAAAAAAAAA')
+        if serializer.is_valid():
+            serializer.save(author=self.request.user, title=title)
 
 
 class CommentViewSet(viewsets.ModelViewSet):
