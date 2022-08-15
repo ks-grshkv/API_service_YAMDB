@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.db.models.constraints import UniqueConstraint
 
 
 User = get_user_model()
@@ -66,6 +67,9 @@ class Review(models.Model):
         'Дата публикации',
         auto_now_add=True,
     )
+
+    class Meta:
+        constraints = (UniqueConstraint(fields=['author', 'title'], name='unique_booking'), )
 
 
 class Comment(models.Model):

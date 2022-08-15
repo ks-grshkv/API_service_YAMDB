@@ -1,5 +1,7 @@
 import datetime
 from email.policy import default
+from urllib import request
+from xml.dom import ValidationErr
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
@@ -52,8 +54,11 @@ class TitleSerializer(serializers.ModelSerializer):
         model = Title
 
     def get_rating(self, obj):
-
-        return obj.review.aggregate(Avg('score')).get('score__avg')
+        rating = obj.review.aggregate(Avg('score')).get('score__avg')
+        if rating is None:
+            return 0
+        else:
+            return rating
 
     def validate_year(self, value):
         year = datetime.date.today().year
@@ -64,6 +69,7 @@ class TitleSerializer(serializers.ModelSerializer):
         return value
 
     def validate_category(self, value):
+        print('VALIDATING DATA', self.context['view'])
         categories = Category.objects.all()
         categories_slug = {element.slug for element in categories}
 
@@ -101,11 +107,72 @@ class ReviewSerializer(serializers.ModelSerializer):
         read_only=True, slug_field='username',
         default=serializers.CurrentUserDefault()
     )
+    title = serializers.SlugRelatedField(
+        read_only=True, slug_field='name'
+    )
 
     class Meta:
         fields = '__all__'
         model = Review
         read_only_fields = ('title',)
+
+    def validate(self, data):
+        author = self.context['request'].user
+        title_id = self.context['view'].kwargs.get('title_id')
+        title = get_object_or_404(
+            Title,
+            pk=title_id,
+        )
+        queryset_len = Review.objects.filter(
+            author=author,
+            title=title
+        ).count()
+        if queryset_len > 0 and self.context['request'].method == 'POST':
+            print('invalid!!!!!!', Review.objects.filter(
+                author=author,
+                title=title
+            ))
+            raise serializers.ValidationError('Нельзя оставить 2 ревью')
+        else:
+            return data
+
+    # def validate_data(self, data):
+    #     author = self.context['request'].user
+    #     print('VALIDATING DATA', self.context['view'])
+    #     title_id = self.context['view'].kwargs.get('title_id')
+    #     title = Title.objects.get(id=title_id)
+    #     print('GETTING OBJ', Review.objects.filter(
+    #         author=author,
+    #         title=title
+    #     ))
+    #     if Review.objects.filter(
+    #         author=author,
+    #         title=title
+    #     ).exists:
+    #         print('invalid!!!!!!')
+    #         raise serializers.ValidationError('Нельзя оставить 2 ревью')
+    #     else:
+    #         return data
+
+    # def create(self, validated_data):
+    #     print('VALIDATED DATA', validated_data)
+    #     author = self.context['request'].user
+    #     title_name = validated_data['title'].name
+    #     title = Title.objects.get(name=title_name)
+    #     if Review.objects.filter(
+    #         author=author,
+    #         title=title
+    #     ).exists:
+    #         print('invalid!!!!!!')
+    #         raise serializers.ValidationError('Нельзя оставить 2 ревью')
+    #     else:
+    #         review = Review.objects.create(
+    #             author=author,
+    #             title=title,
+    #             text=validated_data['text'],
+    #             score=validated_data['score'],
+    #         )
+    #         return review
 
 
 class CommentSerializer(serializers.ModelSerializer):
