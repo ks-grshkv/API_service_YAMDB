@@ -3,7 +3,6 @@ from django.shortcuts import get_object_or_404
 from .mixins import ListCreateDestroyViewset
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
-from django.db.models import Avg
 
 
 from reviews.models import Category, Genre, Title, Review
