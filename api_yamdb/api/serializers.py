@@ -11,14 +11,14 @@ class GenreSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Genre
-        fields = ('name', 'slug')
+        exclude = ('id',)
 
 
 class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
-        fields = ('name', 'slug')
         model = Category
+        exclude = ('id',)
 
 
 class SlugToModelGanreRelatedField(SlugRelatedField):
@@ -46,14 +46,7 @@ class TitleSerializer(serializers.ModelSerializer):
     rating = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
-        fields = (
-            'id',
-            'name',
-            'year',
-            'description',
-            'genre',
-            'category',
-            'rating',)
+        fields = '__all__'
         model = Title
 
     def get_rating(self, obj):
@@ -68,27 +61,6 @@ class TitleSerializer(serializers.ModelSerializer):
             )
         return value
 
-    def validate_category(self, value):
-        print('VALIDATING DATA', self.context['view'])
-        categories = Category.objects.all()
-        categories_slug = {element.slug for element in categories}
-
-        if value.slug not in categories_slug:
-            raise serializers.ValidationError(
-                'Вы ввели не существующую категорию!'
-            )
-
-        return value
-
-    def validate_genre(self, value):
-        genres = Genre.objects.all()
-        categories_slug = {element.slug for element in genres}
-        values_slug = {element.slug for element in genres}
-
-        if len(values_slug & categories_slug) != len(categories_slug):
-            raise serializers.ValidationError('Вы ввели не существующий жанр!')
-
-        return value
 
     def create(self, validated_data):
         genres = validated_data.pop('genre')

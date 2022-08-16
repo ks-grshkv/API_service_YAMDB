@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.db.models import Avg
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, permissions, viewsets
 from rest_framework.pagination import PageNumberPagination
@@ -32,7 +33,7 @@ class GenreViewSet(ListCreateDestroyViewset):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all()
+    queryset = Title.objects.all().annotate(raiting = Avg('review__score'))
     serializer_class = TitleSerializer
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = PageNumberPagination
@@ -50,9 +51,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
-        # author = self.request.user
-        # if Review.objects.filter(title=title, author=author).exists():
-        #     raise ValidationError('AAAAAAAAAA')
         if serializer.is_valid():
             serializer.save(author=self.request.user, title=title)
 
