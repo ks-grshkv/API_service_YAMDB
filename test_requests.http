@@ -3,9 +3,9 @@ POST http://127.0.0.1:8000/api/v1/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "s4ss4",
-    "email": "8fssss@gf.cd",
-    "role": "user"
+    "username": "ww4",
+    "email": "8ws@gf.cd",
+    "role": "admin"
 
 }
 
@@ -39,6 +39,40 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiY
 }
 
 ###
-GET http://127.0.0.1:8000/api/v1/users/me/
+POST http://127.0.0.1:8000/api/v1/categories/
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwNTAzMjI1LCJqdGkiOiI5ZjEwOTM5ZDIxNGM0YjNkOGYwMmFlNDA5ZGI1NmIxMCIsInVzZXJfaWQiOjY5fQ.PhqOAyreNSUBXtUeuFwwv2ea1wmYwL6CSMvDGurdYBA
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwNjM4MTY1LCJqdGkiOiI1ZTEwZGI1NzFmOTE0YTlkYjljNTBkOTdlYWZmMWI3YiIsInVzZXJfaWQiOjF9.N7WFWkvROeUwjz18ZEwNRJ5JSCrIJ20aZoDg01Xtw6Q
+
+{
+"name": "string",
+"slug": "string"
+}
+
+###
+POST http://127.0.0.1:8000/api/v1/titles/
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwNjM4MTY1LCJqdGkiOiI1ZTEwZGI1NzFmOTE0YTlkYjljNTBkOTdlYWZmMWI3YiIsInVzZXJfaWQiOjF9.N7WFWkvROeUwjz18ZEwNRJ5JSCrIJ20aZoDg01Xtw6Q
+
+{
+"name": "string13",
+"year": 0,
+"description": "string10",
+"genre": [],
+"category": "string"
+}
+
+###
+GET http://127.0.0.1:8000/api/v1/titles
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwNjM4MTY1LCJqdGkiOiI1ZTEwZGI1NzFmOTE0YTlkYjljNTBkOTdlYWZmMWI3YiIsInVzZXJfaWQiOjF9.N7WFWkvROeUwjz18ZEwNRJ5JSCrIJ20aZoDg01Xtw6Q
+
+###
+POST http://127.0.0.1:8000/api/v1/titles/13/reviews/
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwNjM4MTY1LCJqdGkiOiI1ZTEwZGI1NzFmOTE0YTlkYjljNTBkOTdlYWZmMWI3YiIsInVzZXJfaWQiOjF9.N7WFWkvROeUwjz18ZEwNRJ5JSCrIJ20aZoDg01Xtw6Q
+
+{
+"text": "string",
+"score": 1
+}
+

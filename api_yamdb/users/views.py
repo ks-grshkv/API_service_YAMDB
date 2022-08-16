@@ -1,25 +1,28 @@
-# from .permissions import IsAuthorOrReadOnlyPermission
+from http import HTTPStatus
 from random import randrange
 
 from django.shortcuts import get_object_or_404
-from rest_framework import generics, permissions, viewsets
+from rest_framework import generics, viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import Roles, User
-from .permissions import IsAdmin, IsAdminOrSelf, IsAdminOrAuth
+from .permissions import IsAdminOrSuper, IsAuth
 from .send_email import Util
 from .serializers import UserSerializer
 
-from http import HTTPStatus
-
-from rest_framework.decorators import action
-
 
 class UserViewSet(viewsets.ModelViewSet):
+    """
+    Эндпоинт users/
+    Используется админами и суперпользователями.
+    Исключение: users/me могут использовать авторизованные
+    пользователи для просмотра и изменения своего профиля.
+    """
     serializer_class = UserSerializer
     queryset = User.objects.all()
-    permission_classes = (IsAdminOrSelf, )
+    permission_classes = (IsAdminOrSuper, )
     lookup_field = 'pk'
 
     def get_object(self):
@@ -31,7 +34,6 @@ class UserViewSet(viewsets.ModelViewSet):
         return obj
 
     def perform_update(self, serializer):
-        print('PERFORM USER UPDATE', self.request.data)
         user = get_object_or_404(
             self.queryset,
             username=self.kwargs[self.lookup_field]
@@ -43,17 +45,12 @@ class UserViewSet(viewsets.ModelViewSet):
         )
         if serializer.is_valid():
             serializer.save()
-        if (user.role != Roles.admin) and (user.role != Roles.user) and (user.role != Roles.moderator):
-            return Response(HTTPStatus.BAD_REQUEST)
-        else:
-            return Response(serializer.data)
-
 
     @action(
         detail=False,
         methods=['get', 'patch'],
         url_path='me',
-        permission_classes=(IsAdminOrAuth, ))
+        permission_classes=(IsAuth, ))
     def me(self, request, pk=None):
         user = get_object_or_404(
             User,
@@ -86,6 +83,10 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class UserRegisterView(generics.GenericAPIView):
+    """
+    Регистрация нового пользователя.
+    Принимаем username и email, высылаем на почту код.
+    """
     serializer_class = UserSerializer
 
     def post(self, serializer):
@@ -94,11 +95,12 @@ class UserRegisterView(generics.GenericAPIView):
         if self.request.data['username'] == 'me':
             return Response(status=HTTPStatus.BAD_REQUEST)
         serializer.save()
+
         user = User.objects.get(
             username=self.request.data['username'],
             email=self.request.data['email'],
         )
-        
+
         user.confirmation_code = randrange(10000, 100000)
         user.save()
 
@@ -110,6 +112,7 @@ class UserRegisterView(generics.GenericAPIView):
             'to': [email_address],
         }
         Util.send_email(data)
+
         return Response({
             "username": self.request.data['username'],
             "email": self.request.data['email'],
@@ -117,8 +120,11 @@ class UserRegisterView(generics.GenericAPIView):
 
 
 class UserGetTokenView(generics.GenericAPIView):
+    """
+    Получение токена в ответ на username и confirmation_code
+    """
     serializer_class = UserSerializer
-    
+
     def post(self, request):
         confirmation_code = self.request.data.get('confirmation_code')
         username = self.request.data.get('username')
@@ -130,14 +136,11 @@ class UserGetTokenView(generics.GenericAPIView):
             confirmation_code=confirmation_code
         ).exists()) and User.objects.filter(username=username).exists():
             return Response(status=HTTPStatus.BAD_REQUEST)
-        try:
-            user = get_object_or_404(
-                User,
-                username=username,
-                confirmation_code=confirmation_code
-            )
-        except Exception as error:
-            return Response(data=str(error), status=HTTPStatus.NOT_FOUND)
+
+        user = get_object_or_404(
+            User,
+            username=username,
+            confirmation_code=confirmation_code
+        )
         refresh = RefreshToken.for_user(user)
         return Response(str(refresh.access_token))
-

@@ -1,19 +1,14 @@
-from rest_framework import filters, permissions, viewsets
 from django.shortcuts import get_object_or_404
-from .mixins import ListCreateDestroyViewset
-from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, permissions, viewsets
+from rest_framework.pagination import PageNumberPagination
+from reviews.models import Category, Genre, Review, Title
 
-
-from reviews.models import Category, Genre, Title, Review
-from .serializers import (CategorySerializer,
-                          GenreSerializer,
-                          TitleSerializer,
-                          ReviewSerializer,
-                          CommentSerializer)
-
-from .permissions import IsAdminOrReadOnly, OwnerModAdmin
 from .filters import TitleFilter
+from .mixins import ListCreateDestroyViewset
+from .permissions import IsAdminOrReadOnly, OwnerModAdmin
+from .serializers import (CategorySerializer, CommentSerializer,
+                          GenreSerializer, ReviewSerializer, TitleSerializer)
 
 
 class CategoryViewSet(ListCreateDestroyViewset):
@@ -55,10 +50,11 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
-#        author = self.request.user
-#        if Review.objects.filter(title=title, author=author).exists():
-#            raise exceptions.ValidationError('')
-        serializer.save(author=self.request.user, title=title)
+        # author = self.request.user
+        # if Review.objects.filter(title=title, author=author).exists():
+        #     raise ValidationError('AAAAAAAAAA')
+        if serializer.is_valid():
+            serializer.save(author=self.request.user, title=title)
 
 
 class CommentViewSet(viewsets.ModelViewSet):

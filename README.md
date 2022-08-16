@@ -3,7 +3,9 @@ api_yamdb
 
 ### Описание проекта:
 
-API для ресурса YAMDB. 
+API для ресурса YAMDB. У нас есть:
+Произведения, их категории и жанры, а также отзывы и оценки к ним.
+Для регистрации пользователь получает код подтверждения на почту.
 
 
 ### Примеры запросов:
@@ -13,9 +15,14 @@ POST http://127.0.0.1:8000/api/v1/auth/signup/
 Content-Type: application/json
 
 {
-    "email": "ex@example.ex",
-    "username": "ExampleUser"
+    "email": "ex1@example.ex",
+    "username": "ExampleUser1"
 }
+
+###
+GET http://127.0.0.1:8000/api/v1/users/me
+Content-Type: application/json
+Authorization: Bearer (insert jwt token here)
 
 
 Подробная документация проекта:
@@ -26,7 +33,7 @@ http://127.0.0.1:8000/redoc/
 Клонировать репозиторий и перейти в него в командной строке:
 
 ```
-git clone https://github.com/ks-grshkv/api_yatube.git
+git clone https://github.com/ks-grshkv/api_yamdb.git
 ```
 
 ```
