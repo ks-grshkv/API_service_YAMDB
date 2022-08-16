@@ -55,7 +55,7 @@ class Review(models.Model):
     )
     text = models.TextField()
     score = models.IntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(10)],
+        validators=[MinValueValidator(1, 'нужно больше'), MaxValueValidator(10)],
     )
     author = models.ForeignKey(
         User,
@@ -70,7 +70,7 @@ class Review(models.Model):
     class Meta:
         constraints = (
             UniqueConstraint(fields=['author', 'title'],
-                             name='unique_booking'),
+                             name='unique_review'),
         )
 
 
