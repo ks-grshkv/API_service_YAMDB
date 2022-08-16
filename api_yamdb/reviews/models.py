@@ -55,7 +55,7 @@ class Review(models.Model):
     )
     text = models.TextField()
     score = models.IntegerField(
-        validators=[MinValueValidator(1, 'нужно больше'), MaxValueValidator(10)],
+        validators=[MinValueValidator(1), MaxValueValidator(10)],
     )
     author = models.ForeignKey(
         User,
