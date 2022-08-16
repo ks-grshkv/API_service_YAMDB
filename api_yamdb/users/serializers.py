@@ -3,8 +3,6 @@ from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
 
 from .models import User
 
-print('ENTER SEIALISER')
-
 
 class UserSerializer(serializers.ModelSerializer):
     username = serializers.CharField(

@@ -8,15 +8,21 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import Roles, User
-from .permissions import IsAdminOrAuth, IsAdminOrSelf
+from .permissions import IsAdminOrSuper, IsAuth
 from .send_email import Util
 from .serializers import UserSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
+    """
+    Эндпоинт users/
+    Используется админами и суперпользователями.
+    Исключение: users/me могут использовать авторизованные
+    пользователи для просмотра и изменения своего профиля.
+    """
     serializer_class = UserSerializer
     queryset = User.objects.all()
-    permission_classes = (IsAdminOrSelf, )
+    permission_classes = (IsAdminOrSuper, )
     lookup_field = 'pk'
 
     def get_object(self):
@@ -39,13 +45,12 @@ class UserViewSet(viewsets.ModelViewSet):
         )
         if serializer.is_valid():
             serializer.save()
-        return Response(serializer.data)
 
     @action(
         detail=False,
         methods=['get', 'patch'],
         url_path='me',
-        permission_classes=(IsAdminOrAuth, ))
+        permission_classes=(IsAuth, ))
     def me(self, request, pk=None):
         user = get_object_or_404(
             User,
@@ -78,6 +83,10 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class UserRegisterView(generics.GenericAPIView):
+    """
+    Регистрация нового пользователя.
+    Принимаем username и email, высылаем на почту код.
+    """
     serializer_class = UserSerializer
 
     def post(self, serializer):
@@ -86,6 +95,7 @@ class UserRegisterView(generics.GenericAPIView):
         if self.request.data['username'] == 'me':
             return Response(status=HTTPStatus.BAD_REQUEST)
         serializer.save()
+
         user = User.objects.get(
             username=self.request.data['username'],
             email=self.request.data['email'],
@@ -102,6 +112,7 @@ class UserRegisterView(generics.GenericAPIView):
             'to': [email_address],
         }
         Util.send_email(data)
+
         return Response({
             "username": self.request.data['username'],
             "email": self.request.data['email'],
@@ -109,6 +120,9 @@ class UserRegisterView(generics.GenericAPIView):
 
 
 class UserGetTokenView(generics.GenericAPIView):
+    """
+    Получение токена в ответ на username и confirmation_code
+    """
     serializer_class = UserSerializer
 
     def post(self, request):
@@ -122,13 +136,11 @@ class UserGetTokenView(generics.GenericAPIView):
             confirmation_code=confirmation_code
         ).exists()) and User.objects.filter(username=username).exists():
             return Response(status=HTTPStatus.BAD_REQUEST)
-        try:
-            user = get_object_or_404(
-                User,
-                username=username,
-                confirmation_code=confirmation_code
-            )
-        except Exception as error:
-            return Response(data=str(error), status=HTTPStatus.NOT_FOUND)
+
+        user = get_object_or_404(
+            User,
+            username=username,
+            confirmation_code=confirmation_code
+        )
         refresh = RefreshToken.for_user(user)
         return Response(str(refresh.access_token))

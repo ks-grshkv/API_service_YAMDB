@@ -3,24 +3,10 @@ from rest_framework import permissions
 from .models import Roles
 
 
-class IsAdmin(permissions.BasePermission):
+class IsAdminOrSuper(permissions.BasePermission):
 
     def has_permission(self, request, view):
-        return (
-            request.user.is_authenticated
-            and request.user.role == Roles.admin
-        )
 
-    def has_object_permission(self, request, view, obj):
-        return (
-            request.user.is_authenticated
-            and request.user.role == Roles.admin
-        )
-
-
-class IsAdminOrSelf(permissions.BasePermission):
-
-    def has_permission(self, request, view):
         verdict = (
             request.user.is_authenticated
             and request.user.role == Roles.admin
@@ -28,6 +14,7 @@ class IsAdminOrSelf(permissions.BasePermission):
         return verdict
 
     def has_object_permission(self, request, view, obj):
+
         verdict = request.user.is_superuser or (
             request.user.is_authenticated
             and request.user.role == Roles.admin
@@ -35,7 +22,7 @@ class IsAdminOrSelf(permissions.BasePermission):
         return verdict
 
 
-class IsAdminOrAuth(permissions.BasePermission):
+class IsAuth(permissions.BasePermission):
 
     def has_permission(self, request, view):
         return request.user.is_authenticated
