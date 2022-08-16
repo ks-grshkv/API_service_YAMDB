@@ -32,3 +32,13 @@ class UserSerializer(serializers.ModelSerializer):
                 fields=['username', 'email']
             )
         ]
+
+    def validate_username(self, value):
+        """
+        Проверяем, что нельзя сделать юзернейм 'me'
+        """
+        if value == 'me':
+            raise serializers.ValidationError('Задайте другой юзернейм')
+        if value is None:
+            raise serializers.ValidationError('Введите юзернейм')
+        return value

@@ -9,7 +9,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import Roles, User
 from .permissions import IsAdminOrSuper, IsAuth
-from .send_email import Util
+from .utils import Util
 from .serializers import UserSerializer
 
 
@@ -33,19 +33,6 @@ class UserViewSet(viewsets.ModelViewSet):
         )
         return obj
 
-    def perform_update(self, serializer):
-        user = get_object_or_404(
-            self.queryset,
-            username=self.kwargs[self.lookup_field]
-        )
-        serializer = self.serializer_class(
-            user,
-            data=self.request.data,
-            partial=True
-        )
-        if serializer.is_valid():
-            serializer.save()
-
     @action(
         detail=False,
         methods=['get', 'patch'],
@@ -60,25 +47,24 @@ class UserViewSet(viewsets.ModelViewSet):
         if request.method == 'GET':
             serializer = self.serializer_class(user)
             return Response(serializer.data)
-        else:
-            data = {"role": request.user.role}
+        data = {'role': request.user.role}
+        serializer = self.serializer_class(
+            user,
+            data=request.data,
+            partial=True
+        )
+        if serializer.is_valid():
+            serializer.save()
+        if (
+            request.user.role != Roles.admin
+        ) and not request.user.is_superuser:
             serializer = self.serializer_class(
                 user,
-                data=request.data,
+                data=data,
                 partial=True
             )
-            if serializer.is_valid():
-                serializer.save()
-            if (
-                request.user.role != Roles.admin
-            ) and not request.user.is_superuser:
-                serializer = self.serializer_class(
-                    user,
-                    data=data,
-                    partial=True
-                )
-            if serializer.is_valid():
-                serializer.save()
+        if serializer.is_valid():
+            serializer.save()
         return Response(serializer.data)
 
 
@@ -92,8 +78,8 @@ class UserRegisterView(generics.GenericAPIView):
     def post(self, serializer):
         serializer = self.serializer_class(data=self.request.data)
         serializer.is_valid(raise_exception=True)
-        if self.request.data['username'] == 'me':
-            return Response(status=HTTPStatus.BAD_REQUEST)
+        # if self.request.data['username'] == 'me':
+        #     return Response(status=HTTPStatus.BAD_REQUEST)
         serializer.save()
 
         user = User.objects.get(
