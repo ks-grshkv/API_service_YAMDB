@@ -1,10 +1,10 @@
 from django.contrib import admin
 
-from .models import Category, Genre, GenreTitle, Title, Review, Comment
+from .models import Category, Comment, Genre, GenreTitle, Review, Title
 
 
 class TitleAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name', 'year', 'description', 'category')
+    list_display = ('pk', 'name', 'year', 'description', 'category', 'rating')
     empty_value_display = '-пусто-'
 
 
