@@ -104,10 +104,10 @@ class UserGetTokenView(generics.GenericAPIView):
     def post(self, request):
         serializer = self.serializer_class(data=self.request.data)
         serializer.is_valid(raise_exception=True)
-        
+
         username = serializer.validated_data.get('username')
         confirmation_code = serializer.validated_data.get('confirmation_code')
-        
+
         users = User.objects.filter(username=username)
 
         if (not users.filter(

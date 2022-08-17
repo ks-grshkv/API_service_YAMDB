@@ -28,4 +28,3 @@ class User(AbstractUser):
         default='00000',
         blank=False,
     )
-
