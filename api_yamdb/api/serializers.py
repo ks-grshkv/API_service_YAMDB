@@ -1,6 +1,3 @@
-import datetime
-
-from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
@@ -66,49 +63,8 @@ class TitleWriteSerializer(serializers.ModelSerializer):
             GenreTitle.objects.create(
                 genre=current_genre, title=title)
 
-        return title    
-    
-'''
-class TitleSerializer(serializers.ModelSerializer):
-    genre = SlugToModelGanreRelatedField(
-        queryset=Genre.objects.all(),
-        slug_field='slug',
-        many=True)
-
-    category = SlugToModelCategoryRelatedField(
-        queryset=Category.objects.all(),
-        slug_field='slug')
-
-    rating = serializers.SerializerMethodField(read_only=True)
-
-    class Meta:
-        fields = '__all__'
-        model = Title
-
-    def get_rating(self, obj):
-        rating = obj.review.aggregate(Avg('score')).get('score__avg')
-        return rating
-
-    def validate_year(self, value):
-        year = datetime.date.today().year
-        if year < value:
-            raise serializers.ValidationError(
-                'Год выпуска фильма не может быть больше текущего года!'
-            )
-        return value
-
-
-    def create(self, validated_data):
-        genres = validated_data.pop('genre')
-        title = Title.objects.create(**validated_data)
-
-        for genre in genres:
-            current_genre = get_object_or_404(Genre, name=genre)
-            GenreTitle.objects.create(
-                genre=current_genre, title=title)
-
         return title
-'''
+
 
 class ReviewSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(

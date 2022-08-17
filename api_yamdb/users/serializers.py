@@ -64,7 +64,7 @@ class GetTokenSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         """
-        Проверяем, что нельзя сделать юзернейм 'me'
+        Проверяем, что нельзя код подтвердения и юзернейм не пустые
         """
         if (
             (data.get('username') is None)

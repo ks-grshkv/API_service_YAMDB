@@ -1,5 +1,5 @@
-from http import HTTPStatus
 import uuid
+from http import HTTPStatus
 
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, viewsets
@@ -9,8 +9,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import Roles, User
 from .permissions import IsAdminOrSuper, IsAuth
-from .utils import Util
 from .serializers import GetTokenSerializer, UserSerializer
+from .utils import Util
 
 
 class UserViewSet(viewsets.ModelViewSet):

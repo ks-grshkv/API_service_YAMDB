@@ -1,5 +1,5 @@
-from django.shortcuts import get_object_or_404
 from django.db.models import Avg
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, permissions, viewsets
 from rest_framework.pagination import PageNumberPagination
@@ -9,7 +9,7 @@ from .filters import TitleFilter
 from .mixins import ListCreateDestroyViewset
 from .permissions import IsAdminOrReadOnly, OwnerModAdmin
 from .serializers import (CategorySerializer, CommentSerializer,
-                          GenreSerializer, ReviewSerializer, 
+                          GenreSerializer, ReviewSerializer,
                           TitleReadSerializer, TitleWriteSerializer)
 
 
@@ -34,7 +34,7 @@ class GenreViewSet(ListCreateDestroyViewset):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all().annotate(rating = Avg('review__score'))
+    queryset = Title.objects.all().annotate(rating=Avg('review__score'))
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = PageNumberPagination
     filter_backends = (DjangoFilterBackend,)
@@ -65,7 +65,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, OwnerModAdmin)
 
     def get_queryset(self):
-        review = get_object_or_404(Review, pk=self.kwargs.get('review_id'), 
+        review = get_object_or_404(Review, pk=self.kwargs.get('review_id'),
                                    title=self.kwargs.get('title_id'))
         return review.comments.all()
 

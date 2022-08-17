@@ -34,9 +34,9 @@ class Title(models.Model):
         related_name='titles')
 
     genre = models.ManyToManyField(
-        Genre, 
+        Genre,
         through='GenreTitle',
-        through_fields = ('title','genre')
+        through_fields=('title', 'genre')
     )
 
     def __str__(self):
@@ -59,8 +59,10 @@ class Review(models.Model):
     )
     text = models.TextField()
     score = models.IntegerField(
-        validators=[MinValueValidator(1, 'баллы должны быть в диапазоне от 1 до 10'),
-                    MaxValueValidator(10, 'баллы должны быть в диапазоне от 1 до 10')],
+        validators=[
+            MinValueValidator(1, 'баллы должны быть в диапазоне от 1 до 10'),
+            MaxValueValidator(10, 'баллы должны быть в диапазоне от 1 до 10')
+        ],
     )
     author = models.ForeignKey(
         User,
