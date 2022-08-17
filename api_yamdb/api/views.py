@@ -34,7 +34,7 @@ class GenreViewSet(ListCreateDestroyViewset):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all().annotate(raiting = Avg('review__score'))
+    queryset = Title.objects.all().annotate(rating = Avg('review__score'))
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = PageNumberPagination
     filter_backends = (DjangoFilterBackend,)

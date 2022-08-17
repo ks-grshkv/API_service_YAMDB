@@ -39,8 +39,6 @@ class Title(models.Model):
         through_fields = ('title','genre')
     )
 
-    rating = models.IntegerField(blank=True, null=True)
-
     def __str__(self):
         return self.name
 

@@ -36,15 +36,17 @@ class SlugToModelCategoryRelatedField(SlugRelatedField):
 class TitleReadSerializer(serializers.ModelSerializer):
     genre = GenreSerializer(many=True, read_only=True)
     category = CategorySerializer(read_only=True)
-
-    rating = serializers.SerializerMethodField(read_only=True)
-
-    def get_rating(self, obj):
-        rating = obj.review.aggregate(Avg('score')).get('score__avg')
-        return rating
+    rating = serializers.IntegerField(read_only=True)
 
     class Meta:
-        fields = '__all__'
+        fields = (
+            'id',
+            'name',
+            'year',
+            'description',
+            'genre',
+            'category',
+            'rating',)
         model = Title
 
 
