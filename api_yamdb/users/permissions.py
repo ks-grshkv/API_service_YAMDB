@@ -9,7 +9,7 @@ class IsAdminOrSuper(permissions.BasePermission):
 
         verdict = (
             request.user.is_authenticated
-            and request.user.role == Roles.admin
+            and request.user.role == Roles.admin.name
         ) or request.user.is_superuser
         return verdict
 
@@ -17,7 +17,7 @@ class IsAdminOrSuper(permissions.BasePermission):
 
         verdict = request.user.is_superuser or (
             request.user.is_authenticated
-            and request.user.role == Roles.admin
+            and request.user.role == Roles.admin.name
         ) or request.user.username == obj.user.username
         return verdict
 

@@ -1,8 +1,10 @@
+from enum import Enum, auto
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-class Roles():
+class Roles(Enum):
     admin = 'admin'
     user = 'user'
     moderator = 'moderator'
@@ -10,9 +12,9 @@ class Roles():
 
 class User(AbstractUser):
     CHOICES = (
-        (Roles.admin, 'Администратор'),
-        (Roles.user, 'Пользователь'),
-        (Roles.moderator, 'Модератор'),
+        (Roles.admin.name, 'Администратор'),
+        (Roles.user.name, 'Пользователь'),
+        (Roles.moderator.name, 'Модератор'),
     )
     bio = models.TextField(
         'Биография',
@@ -21,7 +23,7 @@ class User(AbstractUser):
     role = models.CharField(
         max_length=10,
         choices=CHOICES,
-        default=Roles.user,
+        default=Roles.user.name,
     )
     confirmation_code = models.CharField(
         max_length=5,

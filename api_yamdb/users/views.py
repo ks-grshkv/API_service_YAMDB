@@ -46,7 +46,7 @@ class UserViewSet(viewsets.ModelViewSet):
             serializer = self.serializer_class(user)
             return Response(serializer.data)
 
-        if request.user.role != Roles.admin and not request.user.is_superuser:
+        if request.user.role != Roles.admin.name and not request.user.is_superuser:
             role = request.user.role
             data['role'] = role
 
