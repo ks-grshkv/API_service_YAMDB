@@ -9,7 +9,8 @@ from .filters import TitleFilter
 from .mixins import ListCreateDestroyViewset
 from .permissions import IsAdminOrReadOnly, OwnerModAdmin
 from .serializers import (CategorySerializer, CommentSerializer,
-                          GenreSerializer, ReviewSerializer, TitleSerializer)
+                          GenreSerializer, ReviewSerializer, 
+                          TitleReadSerializer, TitleWriteSerializer)
 
 
 class CategoryViewSet(ListCreateDestroyViewset):
@@ -34,11 +35,16 @@ class GenreViewSet(ListCreateDestroyViewset):
 
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all().annotate(raiting = Avg('review__score'))
-    serializer_class = TitleSerializer
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = PageNumberPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter
+
+    def get_serializer_class(self):
+        if self.action == 'list' or self.action == 'retrieve':
+            return TitleReadSerializer
+        else:
+            return TitleWriteSerializer
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
