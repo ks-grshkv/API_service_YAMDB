@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from random import randrange
+import uuid
 
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, viewsets
@@ -10,7 +10,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .models import Roles, User
 from .permissions import IsAdminOrSuper, IsAuth
 from .utils import Util
-from .serializers import UserSerializer
+from .serializers import GetTokenSerializer, UserSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -39,32 +39,24 @@ class UserViewSet(viewsets.ModelViewSet):
         url_path='me',
         permission_classes=(IsAuth, ))
     def me(self, request, pk=None):
-        user = get_object_or_404(
-            User,
-            username=self.request.user.username,
-        )
+        data = request.data.copy()
+        user = get_object_or_404(User, username=request.user.username)
 
         if request.method == 'GET':
             serializer = self.serializer_class(user)
             return Response(serializer.data)
-        data = {'role': request.user.role}
+
+        if request.user.role != Roles.admin and not request.user.is_superuser:
+            role = request.user.role
+            data['role'] = role
+
         serializer = self.serializer_class(
             user,
-            data=request.data,
-            partial=True
+            data=data,
+            partial=True,
         )
-        if serializer.is_valid():
-            serializer.save()
-        if (
-            request.user.role != Roles.admin
-        ) and not request.user.is_superuser:
-            serializer = self.serializer_class(
-                user,
-                data=data,
-                partial=True
-            )
-        if serializer.is_valid():
-            serializer.save()
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response(serializer.data)
 
 
@@ -78,8 +70,6 @@ class UserRegisterView(generics.GenericAPIView):
     def post(self, serializer):
         serializer = self.serializer_class(data=self.request.data)
         serializer.is_valid(raise_exception=True)
-        # if self.request.data['username'] == 'me':
-        #     return Response(status=HTTPStatus.BAD_REQUEST)
         serializer.save()
 
         user = User.objects.get(
@@ -87,7 +77,7 @@ class UserRegisterView(generics.GenericAPIView):
             email=self.request.data['email'],
         )
 
-        user.confirmation_code = randrange(10000, 100000)
+        user.confirmation_code = uuid.uuid4()
         user.save()
 
         email_body = f'Your confirmation code: {user.confirmation_code}'
@@ -109,18 +99,21 @@ class UserGetTokenView(generics.GenericAPIView):
     """
     Получение токена в ответ на username и confirmation_code
     """
-    serializer_class = UserSerializer
+    serializer_class = GetTokenSerializer
 
     def post(self, request):
-        confirmation_code = self.request.data.get('confirmation_code')
-        username = self.request.data.get('username')
+        serializer = self.serializer_class(data=self.request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        username = serializer.validated_data.get('username')
+        confirmation_code = serializer.validated_data.get('confirmation_code')
+        
+        users = User.objects.filter(username=username)
 
-        if (confirmation_code is None) or (username is None):
-            return Response(status=HTTPStatus.BAD_REQUEST)
-        if (not User.objects.filter(
+        if (not users.filter(
             username=username,
             confirmation_code=confirmation_code
-        ).exists()) and User.objects.filter(username=username).exists():
+        ).exists()) and users.exists():
             return Response(status=HTTPStatus.BAD_REQUEST)
 
         user = get_object_or_404(

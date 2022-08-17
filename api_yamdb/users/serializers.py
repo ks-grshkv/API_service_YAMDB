@@ -34,11 +34,47 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
     def validate_username(self, value):
+
         """
         Проверяем, что нельзя сделать юзернейм 'me'
         """
         if value == 'me':
             raise serializers.ValidationError('Задайте другой юзернейм')
         if value is None:
-            raise serializers.ValidationError('Введите юзернейм')
+            raise serializers.ValidationError('Задайте не пустой юзернейм')
         return value
+
+    def validate_confirmation_code(self, value):
+        """
+        Проверяем, что нельзя сделать юзернейм 'me'
+        """
+        if value is None:
+            raise serializers.ValidationError('Введите код подтверждения')
+        return value
+
+    def create(self, validated_data):
+        return User.objects.create(**validated_data)
+
+
+class GetTokenSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(
+        max_length=100,
+        validators=[UniqueValidator(queryset=User.objects.all())],
+        required=True,
+    )
+
+    class Meta:
+        fields = (
+            'username',
+            'confirmation_code'
+        )
+        model = User
+
+    def validate(self, data):
+        """
+        Проверяем, что нельзя сделать юзернейм 'me'
+        """
+        if (data.get('username') is None) or (data.get('confirmation_code') is None):
+            raise serializers.ValidationError('Задайте не пустой юзернейм')
+        return data
+
