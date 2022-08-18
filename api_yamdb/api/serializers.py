@@ -87,7 +87,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         title_id = self.context['view'].kwargs.get('title_id')
         if Review.objects.filter(
             author=author,
-            title=title_id
+            title__id=title_id
         ).exists():
             raise serializers.ValidationError('Нельзя оставить 2 ревью')
         return data
