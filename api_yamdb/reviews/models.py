@@ -7,7 +7,11 @@ User = get_user_model()
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=256)
+    name = models.CharField(
+        max_length=256,
+        verbose_name='Категория',
+        help_text='Область искусства (например: Музыка, Книги)'
+    )
     slug = models.SlugField(unique=True, max_length=50)
 
     def __str__(self):
@@ -15,7 +19,11 @@ class Category(models.Model):
 
 
 class Genre(models.Model):
-    name = models.CharField(max_length=256)
+    name = models.CharField(
+        max_length=256,
+        verbose_name='Жанр',
+        help_text='Например: Сказка, Рок, Артхаус'
+    )
     slug = models.SlugField(unique=True, max_length=50)
 
     def __str__(self):
@@ -23,21 +31,38 @@ class Genre(models.Model):
 
 
 class Title(models.Model):
-    name = models.TextField(max_length=256)
-    year = models.IntegerField()
-    description = models.TextField(blank=True, null=True)
+    name = models.TextField(
+        max_length=256,
+        db_index=True,
+        verbose_name='Название произведения',
+        help_text='Например: Понедельник начинается в субботу'
+    )
+    year = models.PositiveSmallIntegerField(
+        verbose_name='Год публикации',
+    )
+    description = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name='Описание',
+    )
 
     category = models.ForeignKey(
         Category,
-        blank=True, null=True,
+        verbose_name='Категория',
+        blank=True,
+        null=True,
         on_delete=models.SET_NULL,
-        related_name='titles')
+        related_name='titles'
+    )
 
     genre = models.ManyToManyField(
         Genre,
+        verbose_name='Жанр',
         through='GenreTitle',
         through_fields=('title', 'genre')
     )
+
+    filter_horizontal = ('category', 'genre',)
 
     def __str__(self):
         return self.name
@@ -60,8 +85,12 @@ class Review(models.Model):
     text = models.TextField()
     score = models.IntegerField(
         validators=[
-            MinValueValidator(1, 'баллы должны быть в диапазоне от 1 до 10'),
-            MaxValueValidator(10, 'баллы должны быть в диапазоне от 1 до 10')
+            MinValueValidator(
+                1, message='Баллы должны быть в диапазоне от 1 до 10'
+            ),
+            MaxValueValidator(
+                10, message='Баллы должны быть в диапазоне от 1 до 10'
+            )
         ],
     )
     author = models.ForeignKey(

@@ -112,7 +112,8 @@ class UserGetTokenView(generics.GenericAPIView):
             User,
             username=username,
         )
-        if user.confirmation_code == confirmation_code:
+
+        if user.confirmation_code != confirmation_code:
             return Response(status=HTTPStatus.BAD_REQUEST)
 
         refresh = RefreshToken.for_user(user)
