@@ -34,7 +34,6 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
     def validate_username(self, value):
-
         """
         Проверяем, что нельзя сделать юзернейм 'me'
         """
@@ -44,14 +43,10 @@ class UserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Задайте не пустой юзернейм')
         return value
 
-    def create(self, validated_data):
-        return User.objects.create(**validated_data)
-
 
 class GetTokenSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
         max_length=100,
-        validators=[UniqueValidator(queryset=User.objects.all())],
         required=True,
     )
 
@@ -64,7 +59,7 @@ class GetTokenSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         """
-        Проверяем, что нельзя код подтвердения и юзернейм не пустые
+        Проверяем, что код подтверждения и юзернейм не пустые
         """
         if (
             (data.get('username') is None)

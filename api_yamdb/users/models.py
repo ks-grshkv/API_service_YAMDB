@@ -17,16 +17,30 @@ class User(AbstractUser):
         (Roles.moderator.name, 'Модератор'),
     )
     bio = models.TextField(
-        'Биография',
+        verbose_name='Биография',
         blank=True,
     )
     role = models.CharField(
+        verbose_name='Пользовательская роль',
         max_length=10,
         choices=CHOICES,
         default=Roles.user.name,
     )
     confirmation_code = models.CharField(
-        max_length=5,
+        verbose_name='Код подтверждения',
+        max_length=36,
         default='00000',
         blank=False,
     )
+
+    @property
+    def is_admin(self):
+        return self.role == Roles.admin.name
+
+    @property
+    def is_user(self):
+        return self.role == Roles.user.name
+
+    @property
+    def is_moderator(self):
+        return self.role == Roles.moderator.name
