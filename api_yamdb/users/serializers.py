@@ -34,7 +34,6 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
     def validate_username(self, value):
-
         """
         Проверяем, что нельзя сделать юзернейм 'me'
         """
@@ -60,7 +59,7 @@ class GetTokenSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         """
-        Проверяем, что нельзя код подтвердения и юзернейм не пустые
+        Проверяем, что код подтверждения и юзернейм не пустые
         """
         if (
             (data.get('username') is None)

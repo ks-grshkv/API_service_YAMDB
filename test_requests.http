@@ -41,30 +41,29 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiY
 ###
 POST http://127.0.0.1:8000/api/v1/categories/
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwNjM4MTY1LCJqdGkiOiI1ZTEwZGI1NzFmOTE0YTlkYjljNTBkOTdlYWZmMWI3YiIsInVzZXJfaWQiOjF9.N7WFWkvROeUwjz18ZEwNRJ5JSCrIJ20aZoDg01Xtw6Q
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwOTkzMTQ2LCJqdGkiOiJkOGM5NTZhNzRjZjM0NzJmYTRlZjllODZmNmM2M2ZhNyIsInVzZXJfaWQiOjV9.wOH4f_kjUFux22xyTWg9DUL3qgOIscQpMfUNYogkvMo
 
 {
-"name": "string",
-"slug": "string"
+"name": "WWWWg",
+"slug": "striWwg"
 }
 
 ###
 POST http://127.0.0.1:8000/api/v1/titles/
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwNjM4MTY1LCJqdGkiOiI1ZTEwZGI1NzFmOTE0YTlkYjljNTBkOTdlYWZmMWI3YiIsInVzZXJfaWQiOjF9.N7WFWkvROeUwjz18ZEwNRJ5JSCrIJ20aZoDg01Xtw6Q
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwOTkzMTQ2LCJqdGkiOiJkOGM5NTZhNzRjZjM0NzJmYTRlZjllODZmNmM2M2ZhNyIsInVzZXJfaWQiOjV9.wOH4f_kjUFux22xyTWg9DUL3qgOIscQpMfUNYogkvMo
 
 {
-"name": "string13",
-"year": 0,
-"description": "string10",
-"genre": [],
+"name": "444444",
+"year": 2240,
+"description": "se4410",
 "category": "string"
 }
 
 ###
-GET http://127.0.0.1:8000/api/v1/titles
+GET http://127.0.0.1:8000/api/v1/genres
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwNjM4MTY1LCJqdGkiOiI1ZTEwZGI1NzFmOTE0YTlkYjljNTBkOTdlYWZmMWI3YiIsInVzZXJfaWQiOjF9.N7WFWkvROeUwjz18ZEwNRJ5JSCrIJ20aZoDg01Xtw6Q
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwOTkzMTQ2LCJqdGkiOiJkOGM5NTZhNzRjZjM0NzJmYTRlZjllODZmNmM2M2ZhNyIsInVzZXJfaWQiOjV9.wOH4f_kjUFux22xyTWg9DUL3qgOIscQpMfUNYogkvMo
 
 ###
 POST http://127.0.0.1:8000/api/v1/titles/12/reviews/

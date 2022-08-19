@@ -17,7 +17,7 @@ class User(AbstractUser):
         (Roles.moderator.name, 'Модератор'),
     )
     bio = models.TextField(
-        'Биография',
+        verbose_name='Биография',
         blank=True,
     )
     role = models.CharField(
