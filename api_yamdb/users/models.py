@@ -21,11 +21,13 @@ class User(AbstractUser):
         blank=True,
     )
     role = models.CharField(
+        verbose_name='Пользовательская роль',
         max_length=10,
         choices=CHOICES,
         default=Roles.user.name,
     )
     confirmation_code = models.CharField(
+        verbose_name='Код подтверждения',
         max_length=36,
         default='00000',
         blank=False,

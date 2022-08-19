@@ -34,7 +34,7 @@ class Title(models.Model):
     name = models.TextField(
         max_length=256,
         db_index=True,
-        verbose_name='Название произведения',
+        verbose_name='Произведение',
         help_text='Например: Понедельник начинается в субботу'
     )
     year = models.PositiveSmallIntegerField(
@@ -79,11 +79,15 @@ class GenreTitle(models.Model):
 class Review(models.Model):
     title = models.ForeignKey(
         Title,
+        verbose_name='Произведение',
         on_delete=models.CASCADE,
-        related_name='review'
+        related_name='review',
+        db_index=True
     )
-    text = models.TextField()
+    text = models.TextField(verbose_name='Отзыв на произведение')
     score = models.PositiveSmallIntegerField(
+        verbose_name='Оценка произведения',
+        help_text='Оцените произведение от 1 до 10',
         validators=[
             MinValueValidator(
                 1, message='Баллы должны быть в диапазоне от 1 до 10'
@@ -95,15 +99,17 @@ class Review(models.Model):
     )
     author = models.ForeignKey(
         User,
+        verbose_name='Автор отзыва',
         on_delete=models.CASCADE,
         related_name='review'
     )
     pub_date = models.DateTimeField(
-        'Дата публикации',
+        verbose_name='Дата публикации',
         auto_now_add=True,
     )
 
     class Meta:
+        ordering = ['-pub_date']
         constraints = (
             UniqueConstraint(fields=['author', 'title'],
                              name='unique_review'),
@@ -113,16 +119,21 @@ class Review(models.Model):
 class Comment(models.Model):
     review = models.ForeignKey(
         Review,
+        verbose_name='Отзыв',
         on_delete=models.CASCADE,
         related_name='comments'
     )
-    text = models.TextField()
+    text = models.TextField(verbose_name='Комментарий к отзыву')
     author = models.ForeignKey(
         User,
+        verbose_name='Автор комментария',
         on_delete=models.CASCADE,
         related_name='comments'
     )
     pub_date = models.DateTimeField(
-        'Дата добавления',
+        verbose_name='Дата добавления',
         auto_now_add=True
     )
+
+    class Meta:
+        ordering = ['-pub_date']
