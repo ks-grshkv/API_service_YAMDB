@@ -1,7 +1,5 @@
 from rest_framework import permissions
 
-from .models import Roles
-
 
 class IsAdminOrSuper(permissions.BasePermission):
 
@@ -9,7 +7,7 @@ class IsAdminOrSuper(permissions.BasePermission):
 
         verdict = (
             request.user.is_authenticated
-            and request.user.role == Roles.admin.name
+            and request.user.is_admin
         ) or request.user.is_superuser
         return verdict
 
@@ -17,7 +15,7 @@ class IsAdminOrSuper(permissions.BasePermission):
 
         verdict = request.user.is_superuser or (
             request.user.is_authenticated
-            and request.user.role == Roles.admin.name
+            and request.user.is_admin
         ) or request.user.username == obj.user.username
         return verdict
 

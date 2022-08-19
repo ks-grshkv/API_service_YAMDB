@@ -44,9 +44,6 @@ class UserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Задайте не пустой юзернейм')
         return value
 
-    def create(self, validated_data):
-        return User.objects.create(**validated_data)
-
 
 class GetTokenSerializer(serializers.ModelSerializer):
     username = serializers.CharField(

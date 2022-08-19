@@ -7,7 +7,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import Roles, User
+from .models import User
 from .permissions import IsAdminOrSuper, IsAuth
 from .serializers import GetTokenSerializer, UserSerializer
 from .utils import Util
@@ -23,7 +23,7 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     permission_classes = (IsAdminOrSuper, )
-    lookup_field = 'pk'
+    lookup_field = 'username'
 
     def get_object(self):
         queryset = self.get_queryset()
@@ -46,7 +46,7 @@ class UserViewSet(viewsets.ModelViewSet):
             serializer = self.serializer_class(user)
             return Response(serializer.data)
 
-        if request.user.role != Roles.admin.name and not request.user.is_superuser:
+        if not request.user.is_admin and not request.user.is_superuser:
             role = request.user.role
             data['role'] = role
 
@@ -108,18 +108,12 @@ class UserGetTokenView(generics.GenericAPIView):
         username = serializer.validated_data.get('username')
         confirmation_code = serializer.validated_data.get('confirmation_code')
 
-        users = User.objects.filter(username=username)
-
-        if (not users.filter(
-            username=username,
-            confirmation_code=confirmation_code
-        ).exists()) and users.exists():
-            return Response(status=HTTPStatus.BAD_REQUEST)
-
         user = get_object_or_404(
             User,
             username=username,
-            confirmation_code=confirmation_code
         )
+        if user.confirmation_code == confirmation_code:
+            return Response(status=HTTPStatus.BAD_REQUEST)
+
         refresh = RefreshToken.for_user(user)
         return Response(str(refresh.access_token))
