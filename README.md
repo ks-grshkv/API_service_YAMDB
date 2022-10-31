@@ -1,14 +1,34 @@
 # api_yamdb
-api_yamdb
+[EN] API service similar to IMDB. Authorised sers can leave reviews for movies, books
+and music, and rate them accordingly. Pieces are sorted by genres and categories.
 
-### Описание проекта:
+[RU] Сервис API, аналогичный IMDB. Авторизованные пользователи могут оставлять отзывы о фильмах, книгах
+и музыку, а также оценивать их. Произведения отсортированы по жанрам и категориям.
 
-API для ресурса YAMDB. У нас есть:
-Произведения, их категории и жанры, а также отзывы и оценки к ним.
-Для регистрации пользователь получает код подтверждения на почту.
+### Project Description / Описание проекта:
+
+[EN] In order to sign up, the user sends a request with their email and desired username.
+If the email and username are successfully validated, the user receives a confirmation code by email.
+Then, after sending a request with a username and a confirmation code, the user receives their own JWT token, with which
+they can leave reviews, rate pieces or edit their bio.
+
+Контрибуторы командного проекта:
+- ks_grshkv (тимлмд, разработчик)
+- nata_shepina (разработчик)
+- SmileHorn (разработчик)
+
+[RU] Для регистрации пользователь отправляет запрос со своим имейлом и желаемым username.
+В случае, если email и username проходят валидацию, пользователь получает код подтверждения на почту.
+Отправив запрос с username и кодом подтверждения, пользователь получает собственный JWT токен, с которым
+он может оставлять ревью, оценивать произведения, редактировать собственный профиль.
+
+Team project contributors:
+- ks_grshkv (teamlead, developer)
+- nata_shepina (developer)
+- SmileHorn (developer)
 
 
-### Примеры запросов:
+### Requests Examples / Примеры запросов:
 
 ###
 POST http://127.0.0.1:8000/api/v1/auth/signup/
@@ -28,7 +48,7 @@ Authorization: Bearer (insert jwt token here)
 Подробная документация проекта:
 http://127.0.0.1:8000/redoc/
 
-### Как запустить проект:
+### Launching project / Как запустить проект:
 
 Клонировать репозиторий и перейти в него в командной строке:
 
